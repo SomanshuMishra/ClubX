@@ -34,7 +34,7 @@ class EventImageAdmin(admin.ModelAdmin):
     list_display = ['event', 'image_preview']
 
     def image_preview(self, obj):
-        return obj.image.url if obj.image else None
+        return obj.image if obj.image else None
     
     image_preview.short_description = 'Image Preview'
 
