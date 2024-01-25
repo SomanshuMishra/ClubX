@@ -7,7 +7,7 @@ from Club.EventSerializer import EventSerializer
 
 class EventView(APIView):
     def get(self, request, format=None):
-        events = ClubEvent.objects.all()
+        events = ClubEvent.objects.filter(club__status='active')
         serialized_data = self.serialize_events(events)
         return Response(serialized_data, status=status.HTTP_200_OK)
 
