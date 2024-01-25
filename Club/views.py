@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import ClubDetail
-from .serializers import ClubDetailSerializer
+from .models import ClubDetail , Category
+from .serializers import ClubDetailSerializer , CategorySerializer
 from django.http import Http404
 
 # Create your views here.
@@ -23,3 +23,9 @@ class ClubDetailView(APIView):
         club = self.get_object(club_id)
         serializer = ClubDetailSerializer(club)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class ActiveCategoryView(APIView):
+    def get(self, request, format=None):
+        active_categories = Category.objects.filter(status='active')
+        serialized_data = CategorySerializer(active_categories, many=True).data
+        return Response(serialized_data, status=status.HTTP_200_OK)
