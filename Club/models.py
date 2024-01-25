@@ -23,6 +23,19 @@ class ClubDetail(models.Model):
     instagramUrl = models.CharField(max_length=255, null=True, blank=True)
     twitterUrl = models.CharField(max_length=255, null=True, blank=True)
     
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+    ]
+    
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='inactive', 
+        null=True, 
+        blank=True# You can set the default value if needed
+    )
+    
     def __str__(self):
         return self.clubName
 
