@@ -50,7 +50,7 @@ class ClubDetail(models.Model):
 # models.py
 class EventImage(models.Model):
     event = models.ForeignKey('ClubEvent', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='event_images/', null=True, blank=True)
+    image = models.CharField(max_length=255,null=True,blank=True)
 
 
 class ClubEvent(models.Model):
