@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, ClubDetail , ClubEvent, EventImage
+from .models import Category, ClubDetail , ClubEvent, EventImage, ClubDetailGallery
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -17,6 +17,16 @@ class ClubDetailAdmin(admin.ModelAdmin):
         return ", ".join([category.categoryName for category in obj.clubCategories.all()])
     
     get_category_names.short_description = 'Categories'
+    
+    
+@admin.register(ClubDetailGallery)
+class ClubDetailGalleryAdmin(admin.ModelAdmin):
+    list_display = ['club', 'gallery']
+
+    def gallery_preview(self, obj):
+        return obj.gallery if obj.gallery else None
+    
+    gallery_preview.short_description = 'Gallery Preview'
 
 
 @admin.register(EventImage)

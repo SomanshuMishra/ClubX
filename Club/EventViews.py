@@ -37,3 +37,14 @@ class EventView(APIView):
             })
 
         return serialized_data
+
+
+class EventDetailView(APIView):
+    def get(self, request, event_id, format=None):
+        try:
+            event = ClubEvent.objects.get(eventId=event_id)
+        except ClubEvent.DoesNotExist:
+            return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serialized_data = EventSerializer(event).data
+        return Response(serialized_data, status=status.HTTP_200_OK)

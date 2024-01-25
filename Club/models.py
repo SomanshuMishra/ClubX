@@ -3,6 +3,16 @@ from django.db import models
 class Category(models.Model):
     categoryId = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=255)
+    categoryIcon = models.CharField(max_length=300,null=True,blank=True)
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+    ]
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='active' 
+    )
     
     def __str__(self):
         return self.categoryName
@@ -31,17 +41,17 @@ class ClubDetail(models.Model):
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default='inactive', 
-        null=True, 
-        blank=True# You can set the default value if needed
+        default='inactive' 
     )
     
     def __str__(self):
-        return self.clubName
+        return f"{ self.clubName}"
 
+# models.py
 class EventImage(models.Model):
     event = models.ForeignKey('ClubEvent', on_delete=models.CASCADE)
-    image = models.CharField(max_length=255, null=True, blank=True)  # Changed to CharField
+    image = models.ImageField(upload_to='event_images/', null=True, blank=True)
+
 
 class ClubEvent(models.Model):
     club = models.ForeignKey(ClubDetail, on_delete=models.CASCADE)
@@ -55,3 +65,9 @@ class ClubEvent(models.Model):
 
     def __str__(self):
         return f"{self.eventName} - {self.club.clubName}"
+
+
+class ClubDetailGallery(models.Model):
+        club = models.ForeignKey(ClubDetail, on_delete=models.CASCADE)
+        gallery = models.CharField(max_length = 255)
+        
