@@ -1,7 +1,7 @@
 from django.urls import path , include
 from Club import views
 from Club.views import ClubDetailView , ActiveCategoryView 
-from Club.EventViews import EventView , EventDetailView
+from Club.EventViews import EventView , EventDetailView , CustomEventListView
 
 
 urlpatterns = [
@@ -10,6 +10,8 @@ urlpatterns = [
     path('events/', EventView.as_view(), name='event-list'),
     path('active-categories/', ActiveCategoryView.as_view(), name='active_categories'),
     path('event/<str:event_id>/', EventDetailView.as_view(), name='event_detail'),
+    path('api/events/category/<int:category_id>/', CustomEventListView.as_view(), name='custom_event_list'),
+
 
 
 

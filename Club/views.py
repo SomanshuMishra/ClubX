@@ -29,3 +29,17 @@ class ActiveCategoryView(APIView):
         active_categories = Category.objects.filter(status='active')
         serialized_data = CategorySerializer(active_categories, many=True).data
         return Response(serialized_data, status=status.HTTP_200_OK)
+
+
+class CustomEventListView(APIView):
+    def get_queryset(self, category_id):
+        try:
+            category = Category.objects.get(pk=category_id)
+            return ClubEvent.objects.filter(club__clubCategories=category).order_by('eventStartDate')
+        except Category.DoesNotExist:
+            raise Http404
+
+    def get(self, request, category_id, format=None):
+        events_by_category = self.get_queryset(category_id)
+        serializer = ClubEventSerializer(events_by_category, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

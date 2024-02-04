@@ -58,7 +58,9 @@ class ClubEvent(models.Model):
     eventId = models.CharField(max_length=255, primary_key=True)
     eventName = models.CharField(max_length=255)
     eventStartDate = models.DateField()
+    eventStartTime = models.TimeField(null=True, blank=True)  # Assuming you added this field
     eventStopDate = models.DateField()
+    eventStopTime = models.TimeField(null=True, blank=True)
     eventDescription = models.TextField()
     eventCoverImage = models.CharField(max_length=255, null=True, blank=True)  # Changed to CharField
     eventVideo = models.CharField(max_length=255, null=True, blank=True)  # Changed to CharField

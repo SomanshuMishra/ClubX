@@ -2,8 +2,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import ClubEvent
+from .models import ClubEvent, Category
 from Club.EventSerializer import EventSerializer
+from .serializers import ClubEventSerializer
+from django.http import Http404
+from datetime import date
+from django.utils import timezone
+
 
 class EventView(APIView):
     def get(self, request, format=None):
@@ -48,3 +53,21 @@ class EventDetailView(APIView):
 
         serialized_data = EventSerializer(event).data
         return Response(serialized_data, status=status.HTTP_200_OK)
+    
+    
+class CustomEventListView(APIView):
+    def get_queryset(self, category_id):
+        try:
+            category = Category.objects.get(pk=category_id)
+            today = timezone.now().date()
+            return ClubEvent.objects.filter(
+                club__clubCategories=category,
+                eventStopDate__gte=today  # Exclude events where today's date is greater than eventStopDate
+            ).order_by('eventStartDate')
+        except Category.DoesNotExist:
+            raise Http404
+
+    def get(self, request, category_id, format=None):
+        events_by_category = self.get_queryset(category_id)
+        serializer = ClubEventSerializer(events_by_category, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
