@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Category, ClubDetail , ClubEvent, EventImage, ClubDetailGallery
 
 @admin.register(Category)
+
 class CategoryAdmin(admin.ModelAdmin):
     # Optional: Customize the way Category model is displayed in the admin
     list_display = ['categoryId', 'categoryName']
@@ -40,7 +41,7 @@ class EventImageAdmin(admin.ModelAdmin):
 
 @admin.register(ClubEvent)
 class ClubEventAdmin(admin.ModelAdmin):
-    list_display = ['eventId', 'eventName', 'club', 'eventStartDate', 'eventStopDate']
+    list_display = ['eventId', 'eventName', 'club','eventStartTime',  'eventStopTime']
     search_fields = ['eventId', 'eventName', 'club__clubName']
     list_filter = ['eventStartDate', 'eventStopDate']
 
@@ -49,3 +50,6 @@ class ClubEventAdmin(admin.ModelAdmin):
 
     def club(self, obj):
         return obj.club.clubName
+
+    # Assuming that 'eventStartDate', 'eventStartTime', 'eventStopDate', 'eventStopTime' are fields of the ClubEvent model
+    club.short_description = 'Club'
