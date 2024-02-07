@@ -17,58 +17,58 @@ import json
  
 # Pagination API
 
-class EventView(APIView, PageNumberPagination):
-    page_size = 10  # Set the number of events per page
+# class EventView(APIView, PageNumberPagination):
+#     page_size = 10  # Set the number of events per page
 
-    def get(self, request, format=None):
-        events = ClubEvent.objects.filter(club__status='active')
-        paginated_events = self.paginate_queryset(events, request)
-        serialized_data = self.serialize_events(paginated_events)
-        return self.get_paginated_response(serialized_data)
-
-    def serialize_events(self, events):
-        serialized_data = []
-        club_map = {}
-
-        for event in events:
-            club_id = event.club.clubId
-            if club_id not in club_map:
-                club_map[club_id] = {
-                    'clubId': club_id,
-                    'clubName': event.club.clubName,
-                    'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
-                    'events': []
-                }
-
-            event_data = EventSerializer(event).data
-            club_map[club_id]['events'].append(event_data)
-
-        for club_id, club_data in club_map.items():
-            serialized_data.append({
-                'clubId': club_id,
-                'clubName': club_data['clubName'],
-                'clubLogo': club_data['clubLogo'],
-                'events': club_data['events']
-            })
-
-        return serialized_data
-
-
-# class EventView(APIView):
 #     def get(self, request, format=None):
 #         events = ClubEvent.objects.filter(club__status='active')
-#         serialized_data = self.serialize_events(events)
-#         return Response(serialized_data, status=status.HTTP_200_OK)
+#         paginated_events = self.paginate_queryset(events, request)
+#         serialized_data = self.serialize_events(paginated_events)
+#         return self.get_paginated_response(serialized_data)
 
 #     def serialize_events(self, events):
 #         serialized_data = []
 #         club_map = {}
 
-#         # Use queryset instead of a single instance
-#         event_serializer = EventSerializer(events, many=True)
-#         serialized_data = event_serializer.data
+#         for event in events:
+#             club_id = event.club.clubId
+#             if club_id not in club_map:
+#                 club_map[club_id] = {
+#                     'clubId': club_id,
+#                     'clubName': event.club.clubName,
+#                     'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
+#                     'events': []
+#                 }
+
+#             event_data = EventSerializer(event).data
+#             club_map[club_id]['events'].append(event_data)
+
+#         for club_id, club_data in club_map.items():
+#             serialized_data.append({
+#                 'clubId': club_id,
+#                 'clubName': club_data['clubName'],
+#                 'clubLogo': club_data['clubLogo'],
+#                 'events': club_data['events']
+#             })
 
 #         return serialized_data
+
+
+class EventView(APIView):
+    def get(self, request, format=None):
+        events = ClubEvent.objects.filter(club__status='active')
+        serialized_data = self.serialize_events(events)
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+    def serialize_events(self, events):
+        serialized_data = []
+        club_map = {}
+
+        # Use queryset instead of a single instance
+        event_serializer = EventSerializer(events, many=True)
+        serialized_data = event_serializer.data
+
+        return serialized_data
 
 
 # class EventDetailView(APIView):
