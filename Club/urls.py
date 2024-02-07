@@ -20,7 +20,7 @@ urlpatterns = [
     
     
     # Search APIs
-    path('api/club-search/', ClubSearchView.as_view(), name='club_search'),
+    path('event-id/', ClubSearchView.as_view(), name='club_search'),
 
 
     # All Category
