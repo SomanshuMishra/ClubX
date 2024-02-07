@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import ClubEvent, Category
 from Club.EventSerializer import EventSerializer
+from Club.EventDetailSerializer import EventDetailSerializer
 from .serializers import ClubEventSerializer
 from django.http import Http404
 from datetime import date
@@ -16,48 +17,14 @@ import json
  
 # Pagination API
 
-# class EventView(APIView, PageNumberPagination):
-#     page_size = 10  # Set the number of events per page
+class EventView(APIView, PageNumberPagination):
+    page_size = 10  # Set the number of events per page
 
-#     def get(self, request, format=None):
-#         events = ClubEvent.objects.filter(club__status='active')
-#         paginated_events = self.paginate_queryset(events, request)
-#         serialized_data = self.serialize_events(paginated_events)
-#         return self.get_paginated_response(serialized_data)
-
-#     def serialize_events(self, events):
-#         serialized_data = []
-#         club_map = {}
-
-#         for event in events:
-#             club_id = event.club.clubId
-#             if club_id not in club_map:
-#                 club_map[club_id] = {
-#                     'clubId': club_id,
-#                     'clubName': event.club.clubName,
-#                     'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
-#                     'events': []
-#                 }
-
-#             event_data = EventSerializer(event).data
-#             club_map[club_id]['events'].append(event_data)
-
-#         for club_id, club_data in club_map.items():
-#             serialized_data.append({
-#                 'clubId': club_id,
-#                 'clubName': club_data['clubName'],
-#                 'clubLogo': club_data['clubLogo'],
-#                 'events': club_data['events']
-#             })
-
-#         return serialized_data
-
-
-class EventView(APIView):
     def get(self, request, format=None):
         events = ClubEvent.objects.filter(club__status='active')
-        serialized_data = self.serialize_events(events)
-        return Response(serialized_data, status=status.HTTP_200_OK)
+        paginated_events = self.paginate_queryset(events, request)
+        serialized_data = self.serialize_events(paginated_events)
+        return self.get_paginated_response(serialized_data)
 
     def serialize_events(self, events):
         serialized_data = []
@@ -87,6 +54,23 @@ class EventView(APIView):
         return serialized_data
 
 
+# class EventView(APIView):
+#     def get(self, request, format=None):
+#         events = ClubEvent.objects.filter(club__status='active')
+#         serialized_data = self.serialize_events(events)
+#         return Response(serialized_data, status=status.HTTP_200_OK)
+
+#     def serialize_events(self, events):
+#         serialized_data = []
+#         club_map = {}
+
+#         # Use queryset instead of a single instance
+#         event_serializer = EventSerializer(events, many=True)
+#         serialized_data = event_serializer.data
+
+#         return serialized_data
+
+
 # class EventDetailView(APIView):
 #     def get(self, request, event_id, format=None):
 #         try:
@@ -105,10 +89,10 @@ class EventDetailView(APIView):
         except ClubEvent.DoesNotExist:
             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serialized_data = EventSerializer(event, context={'request': request}).data
+        serialized_data = EventDetailSerializer(event, context={'request': request}).data
 
         # Fetch similar events queryset
-        similar_events_queryset = EventSerializer().get_similar_events(event)
+        similar_events_queryset = EventDetailSerializer().get_similar_events(event)
 
         # Exclude current event from similar events queryset
         similar_events_queryset = similar_events_queryset.exclude(eventId=event_id)
