@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import ClubEvent, Category
 from Club.EventSerializer import EventSerializer
+from Club.EventDetailSerializer import EventDetailSerializer
 from .serializers import ClubEventSerializer
 from django.http import Http404
 from datetime import date
@@ -63,26 +64,9 @@ class EventView(APIView):
         serialized_data = []
         club_map = {}
 
-        for event in events:
-            club_id = event.club.clubId
-            if club_id not in club_map:
-                club_map[club_id] = {
-                    'clubId': club_id,
-                    'clubName': event.club.clubName,
-                    'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
-                    'events': []
-                }
-
-            event_data = EventSerializer(event).data
-            club_map[club_id]['events'].append(event_data)
-
-        for club_id, club_data in club_map.items():
-            serialized_data.append({
-                'clubId': club_id,
-                'clubName': club_data['clubName'],
-                'clubLogo': club_data['clubLogo'],
-                'events': club_data['events']
-            })
+        # Use queryset instead of a single instance
+        event_serializer = EventSerializer(events, many=True)
+        serialized_data = event_serializer.data
 
         return serialized_data
 
@@ -105,10 +89,10 @@ class EventDetailView(APIView):
         except ClubEvent.DoesNotExist:
             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serialized_data = EventSerializer(event, context={'request': request}).data
+        serialized_data = EventDetailSerializer(event, context={'request': request}).data
 
         # Fetch similar events queryset
-        similar_events_queryset = EventSerializer().get_similar_events(event)
+        similar_events_queryset = EventDetailSerializer().get_similar_events(event)
 
         # Exclude current event from similar events queryset
         similar_events_queryset = similar_events_queryset.exclude(eventId=event_id)
