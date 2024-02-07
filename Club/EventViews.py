@@ -64,9 +64,26 @@ class EventView(APIView):
         serialized_data = []
         club_map = {}
 
-        # Use queryset instead of a single instance
-        event_serializer = EventSerializer(events, many=True)
-        serialized_data = event_serializer.data
+        for event in events:
+            club_id = event.club.clubId
+            if club_id not in club_map:
+                club_map[club_id] = {
+                    'clubId': club_id,
+                    'clubName': event.club.clubName,
+                    'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
+                    'events': []
+                }
+
+            event_data = EventSerializer(event).data
+            club_map[club_id]['events'].append(event_data)
+
+        for club_id, club_data in club_map.items():
+            serialized_data.append({
+                'clubId': club_id,
+                'clubName': club_data['clubName'],
+                'clubLogo': club_data['clubLogo'],
+                'events': club_data['events']
+            })
 
         return serialized_data
 
