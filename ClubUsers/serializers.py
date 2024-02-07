@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import ClubUser
-
+# ss
 class ClubUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubUser
