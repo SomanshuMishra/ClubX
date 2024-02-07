@@ -9,6 +9,10 @@ from django.http import Http404
 from datetime import date
 from django.utils import timezone
 from rest_framework.pagination import PageNumberPagination
+from django.core.serializers import serialize
+from django.http import JsonResponse
+import json
+
  
 # Pagination API
 
@@ -83,6 +87,17 @@ class EventView(APIView):
         return serialized_data
 
 
+# class EventDetailView(APIView):
+#     def get(self, request, event_id, format=None):
+#         try:
+#             event = ClubEvent.objects.get(eventId=event_id)
+#         except ClubEvent.DoesNotExist:
+#             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+
+#         serialized_data = EventSerializer(event).data
+#         return Response(serialized_data, status=status.HTTP_200_OK)
+    
+  
 class EventDetailView(APIView):
     def get(self, request, event_id, format=None):
         try:
@@ -90,10 +105,36 @@ class EventDetailView(APIView):
         except ClubEvent.DoesNotExist:
             return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serialized_data = EventSerializer(event).data
-        return Response(serialized_data, status=status.HTTP_200_OK)
-    
-    
+        serialized_data = EventSerializer(event, context={'request': request}).data
+
+        # Fetch similar events queryset
+        similar_events_queryset = EventSerializer().get_similar_events(event)
+
+        # Exclude current event from similar events queryset
+        similar_events_queryset = similar_events_queryset.exclude(eventId=event_id)
+
+        # Convert queryset to set to remove duplicates
+        similar_events_queryset = set(similar_events_queryset)
+
+        # Serialize similar events
+        serialized_similar_events = serialize('json', similar_events_queryset)
+
+        # Convert JSON string to list of dictionaries
+        similar_events_list = json.loads(serialized_similar_events)
+
+        # Sort similar events based on eventStartDate
+        sorted_similar_events = sorted(similar_events_list, key=lambda x: x['fields']['eventStartDate'])
+
+        # Remove "model" key from each event
+        for event in sorted_similar_events:
+            del event['model']
+
+        # Directly include sorted similar events in response data
+        serialized_data['similar_events'] = sorted_similar_events
+
+        return JsonResponse(serialized_data, status=status.HTTP_200_OK)
+
+  
 class CustomEventListView(APIView):
     def get_queryset(self, category_id):
         try:

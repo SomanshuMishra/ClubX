@@ -7,6 +7,7 @@ from .serializers import ClubDetailSerializer
 class ClubSearchView(APIView):
     def get(self, request, format=None):
         # Get category_id from query parameters
+        print("check here")
         category_id = request.query_params.get('category_id')
 
         # Check if category_id is provided
