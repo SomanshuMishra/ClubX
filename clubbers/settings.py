@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-jm@m026#euwuo#cmo_w)3!y-p98$_s7n0^siqx%tx-9*alu7n6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["13.53.168.159"]
+ALLOWED_HOSTS = ["13.201.134.179"]
 
 
 # Application definition
@@ -85,6 +85,7 @@ WSGI_APPLICATION = 'clubbers.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'clubdb_localhost',
         'NAME': 'clubdb',
         'USER': 'admin',
         'PASSWORD': 'clubx#2314',
