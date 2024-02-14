@@ -75,10 +75,21 @@ WSGI_APPLICATION = 'clubbers.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'clubdb',
+        'USER': 'admin',
+        'PASSWORD': 'clubx#2314',
+        'HOST': 'clubdb.cnmcws4ko8kl.ap-south-1.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 

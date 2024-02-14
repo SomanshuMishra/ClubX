@@ -13,6 +13,7 @@ class ClubUser(models.Model):
     mobile_number = models.CharField(max_length=15)
     email = models.EmailField()
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES,null=True,blank=True)
+    image = models.CharField( max_length=250,null=True,blank=True)
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
