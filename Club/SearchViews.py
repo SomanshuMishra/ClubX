@@ -16,7 +16,7 @@ class ClubSearchView(APIView):
         # Check if category_id is provided
         if category_id is not None:
             # Filter clubs by category
-            clubs = ClubDetail.objects.filter(status='active', clubCategories__categoryId=category_id,city=city)
+            clubs = ClubDetail.objects.filter(status='active', clubCategories__categoryId=category_id,city=1)
         else:
             # If no category_id provided, return all active clubs
             clubs = ClubDetail.objects.filter(status='active')
