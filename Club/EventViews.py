@@ -91,7 +91,7 @@ import json
 class EventView(APIView):
     def get(self, request, format=None):
         city = request.query_params.get('city')  # Assuming city is passed as a query parameter
-        events = ClubEvent.objects.filter(club__status='active', club__city__name=city)
+        events = ClubEvent.objects.filter(club__status='active', club__city__id=1)
         serialized_data = self.serialize_events(events)
         return Response(serialized_data, status=status.HTTP_200_OK)
 
