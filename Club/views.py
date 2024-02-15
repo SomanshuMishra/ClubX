@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import ClubDetail , Category
-from .serializers import ClubDetailSerializer , CategorySerializer
+from .models import ClubDetail , Category , ClubEvent
+from .serializers import ClubDetailSerializer , CategorySerializer , ClubEventSerializer
 from django.http import Http404
 
 # Create your views here.

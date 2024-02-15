@@ -25,7 +25,9 @@ class ClubDetail(models.Model):
     clubLogo = models.CharField(max_length=255, null=True, blank=True)  # Changed to CharField
     address = models.CharField(max_length=255, null=True, blank=True)
     pincode = models.CharField(max_length=10, null=True, blank=True)
-    state = models.CharField(max_length=255, null=True, blank=True)
+    state = models.ForeignKey('State', on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey('City', on_delete=models.SET_NULL, null=True, blank=True)
+    state = models.ForeignKey('State', on_delete=models.SET_NULL, null=True, blank=True)
     lat = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True)
     lon = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True)
     clubCategories = models.ManyToManyField(Category, blank=True)
@@ -73,3 +75,17 @@ class ClubDetailGallery(models.Model):
         club = models.ForeignKey(ClubDetail, on_delete=models.CASCADE)
         gallery = models.CharField(max_length = 255)
         
+class State(models.Model):
+    name = models.CharField(max_length=100)
+    abbreviation = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
+
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    abbreviation = models.CharField(max_length=10,null=True,blank=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
