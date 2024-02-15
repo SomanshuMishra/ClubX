@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, ClubDetail , ClubEvent, EventImage, ClubDetailGallery
+from .models import Category, ClubDetail , ClubEvent, EventImage, ClubDetailGallery, State , City
 
 @admin.register(Category)
 
@@ -53,3 +53,10 @@ class ClubEventAdmin(admin.ModelAdmin):
 
     # Assuming that 'eventStartDate', 'eventStartTime', 'eventStopDate', 'eventStopTime' are fields of the ClubEvent model
     club.short_description = 'Club'
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'abbreviation')
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ('name', 'state')
