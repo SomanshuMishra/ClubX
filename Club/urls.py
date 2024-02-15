@@ -1,6 +1,6 @@
 from django.urls import path , include
 from Club import views
-from Club.views import ClubDetailView , ActiveCategoryView 
+from Club.views import ClubDetailView , ActiveCategoryView , CityListView
 from Club.EventViews import EventView , EventDetailView , CustomEventListView
 from Club.SearchViews import ClubSearchView
 
@@ -26,7 +26,8 @@ urlpatterns = [
     # All Category
     path('active-categories/', ActiveCategoryView.as_view(), name='active_categories'),
 
-
+    # City API
+    path('allCity/', CityListView.as_view(), name='CityListView'),
 
 
 ]
