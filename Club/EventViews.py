@@ -128,8 +128,12 @@ from django.utils import timezone
 class EventView(APIView):
     def get(self, request, format=None):
         current_time = timezone.now()
+        category_id = request.query_params.get('category_id')
         city = request.query_params.get('city')  # Assuming city is passed as a query parameter
-        events = ClubEvent.objects.filter(club__status='active', club__city__id=1,eventStopDate__gt=current_time).order_by('eventStartDate')
+        if(category_id!=0):
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=1,eventStopDate__gt=current_time,club__clubCategories=category_id).order_by('eventStartDate')
+        else:
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=1,eventStopDate__gt=current_time).order_by('eventStartDate')
         serialized_data = self.serialize_events(events)
         return Response(serialized_data, status=status.HTTP_200_OK)
 
