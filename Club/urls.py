@@ -2,7 +2,7 @@ from django.urls import path , include
 from Club import views
 from Club.views import ClubDetailView , ActiveCategoryView , CityListView
 from Club.EventViews import EventView , EventDetailView , CustomEventListView
-from Club.SearchViews import ClubSearchView
+from Club.SearchViews import categoryEventSearchView, ClubSearchView
 
 
 urlpatterns = [
@@ -20,7 +20,7 @@ urlpatterns = [
     
     
     # Search APIs
-    path('event-id/', ClubSearchView.as_view(), name='club_search'),
+    path('event-id/', categoryEventSearchView.as_view(), name='club_search'),
 
 
     # All Category
@@ -29,6 +29,10 @@ urlpatterns = [
     # City API
     path('allCity/', CityListView.as_view(), name='CityListView'),
 
+    # Club Search
+    path('clubSearch/', ClubSearchView.as_view(), name='ClubSearchView'),
+    
+    # Event Search
 
 ]
 

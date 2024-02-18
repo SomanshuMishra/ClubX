@@ -1,4 +1,5 @@
 from django.db import models
+from  Club.models import ClubEvent
 
 class ClubUser(models.Model):
     GENDER_CHOICES = [
@@ -17,3 +18,12 @@ class ClubUser(models.Model):
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
+
+
+class FavouriteEvent(models.Model):
+    clubUser = models.ForeignKey(ClubUser, on_delete=models.CASCADE)
+    event = models.ForeignKey(ClubEvent, on_delete=models.CASCADE)
+        
+    def __unicode__(self):
+        return self.clubUser.firstname
+
