@@ -51,3 +51,31 @@ class CityListView(APIView):
         cities = City.objects.all()
         serializer = CitySerializer(cities, many=True)
         return Response(serializer.data)
+
+
+class ClubSearchView(APIView):
+    def get(self, request, format=None):
+        # Get query parameters
+        club_name = request.query_params.get('club_name')
+
+        # Filter clubs based on the provided criteria
+        clubs = ClubDetail.objects.filter(status='active')
+
+        if club_name:
+            # Perform percentage match search
+            clubs = clubs.annotate(
+                name_length=Length('clubName'),
+                match_count=Length('clubName', filter=Value(club_name, output_field=models.CharField())) * 100 / F('name_length')
+            ).filter(match_count__gt=50).order_by('-match_count')[:10]
+
+        serialized_data = self.serialize_clubs(clubs)
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+    def serialize_clubs(self, clubs):
+        serialized_data = []
+
+        for club in clubs:
+            club_data = ClubDetailSerializer(club).data
+            serialized_data.append(club_data)
+
+        return serialized_data

@@ -1,5 +1,6 @@
 from django.db import models
-from  Club.models import ClubEvent
+from  Club.models import ClubEvent, City
+
 
 class ClubUser(models.Model):
     GENDER_CHOICES = [
@@ -13,6 +14,8 @@ class ClubUser(models.Model):
     lastname = models.CharField(max_length=100)
     mobile_number = models.CharField(max_length=15)
     email = models.EmailField()
+    dob = models.DateField(blank=True,null =True)
+    city = models.ForeignKey(City,on_delete=models.DO_NOTHING,blank=True,null =True)
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES,null=True,blank=True)
     image = models.CharField( max_length=250,null=True,blank=True)
 

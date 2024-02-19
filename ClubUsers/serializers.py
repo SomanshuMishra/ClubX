@@ -4,7 +4,7 @@ from .models import ClubUser, FavouriteEvent
 class ClubUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubUser
-        fields = ['clubberId', 'firstname', 'lastname', 'mobile_number', 'email','image']
+        fields = ['clubberId', 'firstname', 'lastname', 'mobile_number', 'email','image','dob','city','gender']
 
     def validate_clubberId(self, value):
         """
@@ -33,7 +33,7 @@ class ClubUserSerializer(serializers.ModelSerializer):
 class UpdateClubUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClubUser
-        fields = ['clubberId', 'firstname', 'lastname', 'mobile_number', 'email','image']
+        fields = ['clubberId', 'firstname', 'lastname', 'mobile_number', 'email','image','dob','city','gender']
 
     def validate_mobile_number(self, value):
         """
