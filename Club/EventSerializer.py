@@ -37,4 +37,32 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['categoryId', 'categoryName', 'categoryIcon', 'status']
 
+
+class ClubEventSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClubEvent
+        fields = ['eventId', 'eventName', 'eventStartDate', 'eventStartTime', 'eventStopDate', 'eventStopTime', 'eventDescription', 'eventCoverImage', 'eventVideo', 'club']
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['club'] = {
+    #         'clubId': instance.club.clubId,
+    #         'clubName': instance.club.clubName,
+    #         'clubDescription': instance.club.clubDescription,
+    #         'clubCoverImage': instance.club.clubCoverImage,
+    #         'clubLogo': instance.club.clubLogo,
+    #         'address': instance.club.address,
+    #         'pincode': instance.club.pincode,
+    #         # 'state': instance.club.state.stateName if instance.club.state else None,
+    #         # 'city': instance.club.city.cityName if instance.club.city else None,
+    #         'lat': str(instance.club.lat),
+    #         'lon': str(instance.club.lon),
+    #         'clubCategories': [category.categoryName for category in instance.club.clubCategories.all()],
+    #         'facebookUrl': instance.club.facebookUrl,
+    #         'instagramUrl': instance.club.instagramUrl,
+    #         'twitterUrl': instance.club.twitterUrl,
+    #         'status': instance.club.status
+    #     }
+    #     return representation
+    
     

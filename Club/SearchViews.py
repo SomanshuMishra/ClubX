@@ -1,8 +1,10 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import ClubDetail
+from .models import ClubDetail , ClubEvent
+from django.utils import timezone
 from .serializers import ClubDetailSerializer
+from .EventSerializer import ClubEventSearchSerializer
 from django.db.models import F, Value
 from django.db.models.functions import Length
 from django.db import models  # Add this import
@@ -77,3 +79,33 @@ class ClubSearchView(APIView):
             serialized_data.append(club_data)
 
         return serialized_data
+    
+    
+class ClubEventSearch(APIView):
+    def get(self, request):
+        # Get parameters from the request
+        city = request.query_params.get('city', None)
+        event_name = request.query_params.get('event_name', None)
+        current_time = timezone.now()
+
+        if city is None:
+            return Response({"error": "City parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Initial queryset with basic filters
+        club_events = ClubEvent.objects.filter(
+            eventStopDate__gt=current_time,  # Filter events whose stop date is greater than current time
+            club__city__id=city,  # Filter events belonging to the specified city
+            club__status='active'  # Filter events belonging to active clubs
+        )
+
+        # If event name is provided, filter by event name
+        if event_name:
+            club_events = club_events.filter(eventName__icontains=event_name)
+
+        # Serialize the filtered ClubEvent instances
+        serialized_club_events = ClubEventSearchSerializer(club_events, many=True)
+
+        return Response(serialized_club_events.data)
+    
+    
+    

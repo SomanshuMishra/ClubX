@@ -132,10 +132,10 @@ class EventView(APIView):
         
         city = request.query_params.get('city')  # Assuming city is passed as a query parameter
         if(category_id is None):
-            events = ClubEvent.objects.filter(club__status='active', club__city__id=1,eventStopDate__gt=current_time).order_by('eventStartDate')
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time).order_by('eventStartDate')
         else:
             
-            events = ClubEvent.objects.filter(club__status='active', club__city__id=1,eventStopDate__gt=current_time,club__clubCategories__categoryId=category_id).order_by('eventStartDate')
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time,club__clubCategories__categoryId=category_id).order_by('eventStartDate')
         serialized_data = self.serialize_events(events)
         return Response(serialized_data, status=status.HTTP_200_OK)
 
@@ -234,6 +234,7 @@ class CustomEventListView(APIView):
         events_by_category = self.get_queryset(category_id)
         serializer = ClubEventSerializer(events_by_category, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
     
     

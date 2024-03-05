@@ -2,7 +2,7 @@ from django.urls import path , include
 from Club import views
 from Club.views import ClubDetailView , ActiveCategoryView , CityListView
 from Club.EventViews import EventView , EventDetailView , CustomEventListView
-from Club.SearchViews import categoryEventSearchView, ClubSearchView
+from Club.SearchViews import categoryEventSearchView, ClubSearchView, ClubEventSearch
 
 
 urlpatterns = [
@@ -33,6 +33,7 @@ urlpatterns = [
     path('clubSearch/', ClubSearchView.as_view(), name='ClubSearchView'),
     
     # Event Search
+    path('eventSearch/', ClubEventSearch.as_view(), name='ClubSearchView'),
 
 ]
 
