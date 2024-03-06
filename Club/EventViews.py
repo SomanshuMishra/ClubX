@@ -126,20 +126,66 @@ import json
 from django.utils import timezone
 
 class EventView(APIView):
+    # def get(self, request, format=None):
+    #     current_time = timezone.now()
+    #     category_id = request.query_params.get('category_id')
+        
+    #     city = request.query_params.get('city')  # Assuming city is passed as a query parameter
+    #     if(category_id is None):
+    #         events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time).order_by('eventStartDate')
+    #     else:
+            
+    #         events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time,club__clubCategories__categoryId=category_id).order_by('eventStartDate')
+    #     serialized_data = self.serialize_events(events)
+    #     return Response(serialized_data, status=status.HTTP_200_OK)
+    
+    
+
+    # def serialize_events(self, events):
+    #     serialized_data = []
+    #     club_map = {}
+
+    #     for event in events:
+    #         club_id = event.club.clubId
+    #         if club_id not in club_map:
+    #             club_map[club_id] = {
+    #                 'clubId': club_id,
+    #                 'clubName': event.club.clubName,
+    #                 'clubLogo': event.club.clubLogo if event.club.clubLogo else None,
+    #                 'events': []
+    #             }
+
+    #         club_map[club_id]['events'].append(event)
+
+    #     for club_id, club_data in club_map.items():
+    #         sorted_events = sorted(club_data['events'], key=lambda x: x.eventStartDate)
+    #         event_data = [EventSerializer(event).data for event in sorted_events]
+            
+    #         serialized_data.append({
+    #             'clubId': club_id,
+    #             'clubName': club_data['clubName'],
+    #             'clubLogo': club_data['clubLogo'],
+    #             'events': event_data
+    #         })
+
+    #     return serialized_data
+
+
     def get(self, request, format=None):
         current_time = timezone.now()
         category_id = request.query_params.get('category_id')
+        user_id = request.query_params.get('userId')
         
         city = request.query_params.get('city')  # Assuming city is passed as a query parameter
-        if(category_id is None):
-            events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time).order_by('eventStartDate')
+        if category_id is None:
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=city, eventStopDate__gt=current_time).order_by('eventStartDate')
         else:
-            
-            events = ClubEvent.objects.filter(club__status='active', club__city__id=city,eventStopDate__gt=current_time,club__clubCategories__categoryId=category_id).order_by('eventStartDate')
-        serialized_data = self.serialize_events(events)
+            events = ClubEvent.objects.filter(club__status='active', club__city__id=city, eventStopDate__gt=current_time, club__clubCategories__categoryId=category_id).order_by('eventStartDate')
+        
+        serialized_data = self.serialize_events(events, user_id)  # Pass user id here
         return Response(serialized_data, status=status.HTTP_200_OK)
 
-    def serialize_events(self, events):
+    def serialize_events(self, events, user_id):
         serialized_data = []
         club_map = {}
 
@@ -157,8 +203,7 @@ class EventView(APIView):
 
         for club_id, club_data in club_map.items():
             sorted_events = sorted(club_data['events'], key=lambda x: x.eventStartDate)
-            event_data = [EventSerializer(event).data for event in sorted_events]
-            
+            event_data = [EventSerializer(event, context={'userId': user_id}).data for event in sorted_events]  # Pass user id to serializer context
             serialized_data.append({
                 'clubId': club_id,
                 'clubName': club_data['clubName'],
