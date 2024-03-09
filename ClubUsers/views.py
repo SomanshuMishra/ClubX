@@ -54,6 +54,7 @@ class ClubUserRetrieveView(APIView):
 class FavouriteEventAPI(APIView):
     def post(self, request, format=None):
         serializer = FavouriteEventSerializer(data=request.data)
+        print("request.data  - " ,request.data)
         if serializer.is_valid():
             
             club_user = serializer.validated_data['clubUser']
