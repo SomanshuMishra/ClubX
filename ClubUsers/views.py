@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import ClubUser
+from .models import ClubUser, FavouriteEvent
 from .serializers import ClubUserSerializer, FavouriteEventSerializer, UpdateClubUserSerializer
 
 
@@ -42,10 +42,33 @@ class ClubUserRetrieveView(APIView):
 
 
 # Save Favourite Event
+# class FavouriteEventAPI(APIView):
+#     def post(self, request, format=None):
+#         serializer = FavouriteEventSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class FavouriteEventAPI(APIView):
     def post(self, request, format=None):
         serializer = FavouriteEventSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            club_user = serializer.validated_data['clubUser']
+            event = serializer.validated_data['event']
+            print("club_user -- " , club_user)
+            print("event -- " , event)
+            
+            # Check if the combination already exists in the database
+            existing_entry = FavouriteEvent.objects.filter(clubUser=club_user, event=event).first()
+            if existing_entry:
+                existing_entry.delete()  # Delete the existing entry
+                return Response("Existing entry deleted", status=status.HTTP_200_OK)
+            else:
+                serializer.save()  # Save the new entry
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+   
