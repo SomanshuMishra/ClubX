@@ -72,6 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'clubbers.wsgi.application'
+CSRF_TRUSTED_ORIGINS = ['https://13.201.134.179']
 
 
 # Database
