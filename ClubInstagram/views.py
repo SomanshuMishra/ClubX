@@ -76,7 +76,7 @@ def get_instagram_data(request):
 
 
 
-def save_instagram_data(request,access_token):
+def save_instagram_data(access_token):
     # access_token = request.GET.get('access_token')
     # club_id = request.GET.get('club_id')  # Fetch clubId from request
     club_id='Club001'
