@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-jm@m026#euwuo#cmo_w)3!y-p98$_s7n0^siqx%tx-9*alu7n6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ["*"]
 ALLOWED_HOSTS = ["13.201.134.179"]
 
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Club',
     'ClubUsers',
+    'ClubInstagram',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'clubbers.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,7 +91,8 @@ DATABASES = {
         'NAME': 'clubdb',
         'USER': 'admin',
         'PASSWORD': 'clubx#2314',
-        'HOST': 'clubdb.cnmcws4ko8kl.ap-south-1.rds.amazonaws.com',
+        'HOST': 'clubx-db.cnmcws4ko8kl.ap-south-1.rds.amazonaws.com',   
+        # 'HOST': 'localhost',
         'PORT': '3306',
     }
 }

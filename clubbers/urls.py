@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("Club.urls")),
     path('ClubUser/', include("ClubUsers.urls")),
+    path('instagram/', include("ClubInstagram.urls")),
 ]
