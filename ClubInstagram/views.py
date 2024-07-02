@@ -7,7 +7,7 @@ from ClubInstagram.models import ClubInstagramMedia
 # Create your views here.
 def initiate_instagram_auth(request):
     app_id = '1600510753850672'
-    redirect_uri = 'https://13.201.134.179/instagram/'
+    redirect_uri = 'https://13.201.134.179/instagram/callback/'
     scope = 'instagram_graph_user_profile,instagram_graph_user_media'
     scope = 'user_profile,user_media'
     
@@ -23,7 +23,7 @@ def handle_instagram_callback(request):
         'client_id': '1600510753850672',
         'client_secret': 'e1523bd685399d4e777ca46c7fb7fded',
         'grant_type': 'authorization_code',
-        'redirect_uri': 'https://13.201.134.179/instagram/',  # Use the same URI here
+        'redirect_uri': 'https://13.201.134.179/instagram/callback/',  # Use the same URI here
         'code': code
     }
 
